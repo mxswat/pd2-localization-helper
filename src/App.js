@@ -50,7 +50,11 @@ function App() {
   }
 
   function downloadJSON() {
-    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(localizationItems, null, 2));
+    const objects = localizationItems.reduce((acc, item) => {
+      acc[item[0]] = item[1]
+      return acc
+    }, {})
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(objects, null, 2));
     var dlAnchorElem = document.createElement('a');
     dlAnchorElem.setAttribute("href", dataStr);
     dlAnchorElem.setAttribute("download", "locale.json");
@@ -78,7 +82,7 @@ function App() {
 
       <div className="lists">
         {localizationItems.map((item, i) => (
-          <Editor key={i+item[0]} textKey={item[0]} text={item[1]} onUpdated={e => updateItem(e, i)} onDeleted={() => deleteLocItem(i)}></Editor>
+          <Editor key={i + item[0]} textKey={item[0]} text={item[1]} onUpdated={e => updateItem(e, i)} onDeleted={() => deleteLocItem(i)}></Editor>
         ))}
       </div>
     </div>
