@@ -1,12 +1,13 @@
 import './App.css';
 import React, { useEffect, useState } from 'react';
 import bbcodeParser from "./BBCodeEmulator";
-import { Form, Button, Input } from 'semantic-ui-react'
+import { Form, Button } from 'semantic-ui-react'
 import { Divider, Container } from 'semantic-ui-react'
 import { DEFAULT } from "./items.default";
 function App() {
   const [items, setItems] = useState(DEFAULT);
 
+  const uploadRef = React.createRef()
   function readJSON(e) {
     var reader = new FileReader();
     reader.onload = onReaderLoad;
@@ -17,26 +18,38 @@ function App() {
 
   function onReaderLoad(event) {
     console.log(event.target.result);
-    var obj = JSON.parse(event.target.result);
-    setItems(obj)
+    try {
+      var obj = JSON.parse(event.target.result);
+      setItems(obj)
+    } catch (error) {
+      alert("Hey, this file is not a valid localization file (a JSON file)")
+    }
+  }
+
+  function addNewKeyVar() {
+    const _internalJSON = { ...items }
+    _internalJSON[`Random_string_${new Date().getMilliseconds()}`] = "Something goes here"
+    setItems(_internalJSON)
   }
 
   function deleteKeyVal(keyVal) {
-    const _internalJSON = items
+    const _internalJSON = { ...items }
     delete _internalJSON[keyVal]
     setItems(_internalJSON)
   }
 
   function updateInternalJson(payload) {
-    if (!payload.keyVal || !payload.value) return
-    console.log(payload)
-    const _internalJSON = items
-    _internalJSON[payload.keyVal] = payload.value
-    setItems(_internalJSON)
+    if (payload.value !== undefined) {
+      const _internalJSON = { ...items }
+      _internalJSON[payload.keyVal] = payload.value
+      setItems(_internalJSON)
+    } else if (payload.keyVal) {
+
+    }
   }
 
   function downloadJSON() {
-    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(items));
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(items, null, 2));
     var dlAnchorElem = document.createElement('a');
     dlAnchorElem.setAttribute("href", dataStr);
     dlAnchorElem.setAttribute("download", "locale.json");
@@ -50,20 +63,21 @@ function App() {
   return (
     <div className="App">
       <header>
-        <Container className="toolbar">
-          <Button>New Project</Button>
-          <Input label="Load file" onChange={readJSON} id="file" type="file" />
-          <Button onClick={downloadJSON}>Save to file</Button>
-          <Divider></Divider>
+        <Container>
+          <div className="toolbar">
+            <Button>New Project</Button>
+            <Button onClick={() => uploadRef.current?.click()}>Load from file</Button>
+            <Button onClick={() => downloadJSON()}>Save to file</Button>
+            <div className="spacer"></div>
+            <Button onClick={() => addNewKeyVar()}>Add new Line</Button>
+            <input ref={uploadRef} hidden label="Load file" onChange={readJSON} id="file" type="file" />
+          </div>
         </Container>
       </header>
 
-      <Container>
-        <Button>Add new Line</Button>
-      </Container>
       <div className="lists">
         {Object.keys(items).map((key, i) => (
-          <Editor key={key} textKey={key} text={items[key]} onUpdated={updateInternalJson} onDeleted={deleteKeyVal}></Editor>
+          <Editor key={key} textKey={key} text={items[key]} onUpdated={updateInternalJson} onDeleted={() => deleteKeyVal()}></Editor>
         ))}
       </div>
     </div>
@@ -75,11 +89,12 @@ function Editor({ textKey, text, onUpdated, onDeleted }) {
   const [value, setValue] = useState("");
   const [rendered, setRendered] = useState("")
   const [taRows, setTaRows] = useState(5)
-
-  onUpdated({
-    keyVal: keyVal,
-    value: value
-  })
+  const emptyError = (txt) => {
+    return {
+      content: txt || 'Hey, this is empty',
+      pointing: 'below',
+    }
+  }
 
   useEffect(() => {
     if (textKey && !rendered) {
@@ -93,19 +108,36 @@ function Editor({ textKey, text, onUpdated, onDeleted }) {
     }
   }, [textKey, text, rendered])
 
-  function setValueAndPrint(val) {
-    setValue(val)
-    const bb = bbcodeParser.bbcodeToHtml(val)
+  function setKeyAndUpdate(val) {
+    setkeyVal(val)
+    onUpdated({
+      keyVal: keyVal,
+      value: val
+    })
+  }
+
+  function setValueAndPrint(incomingValue) {
+    setValue(incomingValue)
+    const bb = bbcodeParser.bbcodeToHtml(incomingValue)
     setRendered(bb)
-    setTaRows(val.split(/\r\n|\r|\n/).length)
+    setTaRows(incomingValue.split(/\r\n|\r|\n/).length)
+    onUpdated({
+      keyVal: keyVal,
+      value: incomingValue
+    })
   }
 
   return (
     <Container>
       <Form className="editor">
         <Form.Group widths='equal'>
-          <Form.Input label='Locale Key' type='text' value={keyVal} onChange={e => setkeyVal(e.target.value)} />
-          <Button color='red' onClick={onDeleted(keyVal)}>Remove</Button>
+          <Form.Input
+            label='Locale Key'
+            type='text'
+            value={keyVal}
+            onChange={e => setKeyAndUpdate(e.target.value)}
+            error={!keyVal ? emptyError("This field must have a value! If you want to remove it, click on the delete button") : false} />
+          <Button color='red' onClick={() => onDeleted(keyVal)}>Remove</Button>
         </Form.Group>
         <Form.TextArea
           className="no-resize"
@@ -113,10 +145,7 @@ function Editor({ textKey, text, onUpdated, onDeleted }) {
           label={`Locale Content for ${keyVal}`}
           value={value}
           onChange={e => setValueAndPrint(e.target.value)}
-          error={!value ? {
-            content: 'Hey, this is empty',
-            pointing: 'below',
-          } : false} />
+          error={!value ? emptyError() : false} />
         <Form.Field>
           <label>Result</label>
           <div className="result" dangerouslySetInnerHTML={{ __html: rendered }}></div>
