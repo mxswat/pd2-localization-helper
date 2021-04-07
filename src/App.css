@@ -27,3 +27,9 @@ header {
 .spacer {
     flex: 3;
 }
+
+
+button.ui.red.button.delete-btt {
+    margin-top: auto;
+    min-height: 38px;
+}

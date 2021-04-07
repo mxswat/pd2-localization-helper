@@ -120,6 +120,7 @@ function Editor({ textKey, text, onUpdated, onDeleted }) {
 
   function setKeyAndUpdate(newKey) {
     setItemKey(newKey)
+    if (!newKey) return
     onUpdated({
       textKey: newKey,
     })
@@ -145,7 +146,7 @@ function Editor({ textKey, text, onUpdated, onDeleted }) {
             defaultValue={itemKey}
             onBlur={e => setKeyAndUpdate(e.target.value)}
             error={!itemKey ? emptyError("This field must have a value! If you want to remove it, click on the delete button") : false} />
-          <Button color='red' onClick={() => onDeleted(itemKey)}>Remove</Button>
+          <Button className="delete-btt" color='red' onClick={() => onDeleted(itemKey)}>Remove</Button>
         </Form.Group>
         <Form.TextArea
           className="no-resize"
