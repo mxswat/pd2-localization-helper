@@ -3,9 +3,9 @@ const execa = require("execa");
     try {
         await execa("git", ["checkout", "--orphan", "gh-pages"]);
         console.log("Building...");
-        await execa("npm", ["run", "build"]);
-        await execa("git", ["--work-tree", 'dist', "add", "--all"]);
-        await execa("git", ["--work-tree", 'dist', "commit", "-m", "gh-pages"]);
+        await execa("yarn", ["build"]);
+        await execa("git", ["--work-tree", 'build', "add", "--all"]);
+        await execa("git", ["--work-tree", 'build', "commit", "-m", "gh-pages"]);
         console.log("Pushing to gh-pages...");
         await execa("git", ["push", "origin", "HEAD:gh-pages", "--force"]);
         await execa("git", ["checkout", "-f", "master"]);
