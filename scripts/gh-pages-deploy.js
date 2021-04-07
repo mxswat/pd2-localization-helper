@@ -8,7 +8,7 @@ const execa = require("execa");
         await execa("git", ["--work-tree", 'build', "commit", "-m", "gh-pages"]);
         console.log("Pushing to gh-pages...");
         await execa("git", ["push", "origin", "HEAD:gh-pages", "--force"]);
-        await execa("git", ["checkout", "-f", "master"]);
+        await execa("git", ["checkout", "-f", "main"]);
         await execa("git", ["branch", "-D", "gh-pages"]);
         console.log("Successfully deployed");
     } catch (e) {
