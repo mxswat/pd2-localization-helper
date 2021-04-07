@@ -19,8 +19,12 @@ function App() {
   function onReaderLoad(event) {
     console.log(event.target.result);
     try {
-      var obj = JSON.parse(event.target.result);
-      setLocalizationItems(obj)
+      var parsed = JSON.parse(event.target.result);
+      const toObject = Object.keys(parsed).reduce((acc, key) => { 
+        acc.push([key, parsed[key]])
+        return acc
+      }, [])
+      setLocalizationItems(toObject)
     } catch (error) {
       alert("Hey, this file is not a valid localization file (a JSON file)")
     }
