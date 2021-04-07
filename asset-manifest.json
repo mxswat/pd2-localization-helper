@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/pd2-localization-helper/static/css/main.fe8d9fce.chunk.css",
+    "main.js": "/pd2-localization-helper/static/js/main.2028c3d1.chunk.js",
+    "main.js.map": "/pd2-localization-helper/static/js/main.2028c3d1.chunk.js.map",
+    "runtime-main.js": "/pd2-localization-helper/static/js/runtime-main.38634ab5.js",
+    "runtime-main.js.map": "/pd2-localization-helper/static/js/runtime-main.38634ab5.js.map",
+    "static/css/2.952f6451.chunk.css": "/pd2-localization-helper/static/css/2.952f6451.chunk.css",
+    "static/js/2.98afe123.chunk.js": "/pd2-localization-helper/static/js/2.98afe123.chunk.js",
+    "static/js/2.98afe123.chunk.js.map": "/pd2-localization-helper/static/js/2.98afe123.chunk.js.map",
+    "static/js/3.ee28e622.chunk.js": "/pd2-localization-helper/static/js/3.ee28e622.chunk.js",
+    "static/js/3.ee28e622.chunk.js.map": "/pd2-localization-helper/static/js/3.ee28e622.chunk.js.map",
+    "index.html": "/pd2-localization-helper/index.html",
+    "service-worker.js": "/pd2-localization-helper/service-worker.js",
+    "service-worker.js.map": "/pd2-localization-helper/service-worker.js.map",
+    "static/css/2.952f6451.chunk.css.map": "/pd2-localization-helper/static/css/2.952f6451.chunk.css.map",
+    "static/css/main.fe8d9fce.chunk.css.map": "/pd2-localization-helper/static/css/main.fe8d9fce.chunk.css.map",
+    "static/js/2.98afe123.chunk.js.LICENSE.txt": "/pd2-localization-helper/static/js/2.98afe123.chunk.js.LICENSE.txt",
+    "static/media/semantic.min.css": "/pd2-localization-helper/static/media/outline-icons.ddae9b1b.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.38634ab5.js",
+    "static/css/2.952f6451.chunk.css",
+    "static/js/2.98afe123.chunk.js",
+    "static/css/main.fe8d9fce.chunk.css",
+    "static/js/main.2028c3d1.chunk.js"
+  ]
+}
